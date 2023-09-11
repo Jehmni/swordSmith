@@ -77,8 +77,6 @@ function sendAudioRecording(blob) {
   })
   .then(response => response.json())
   .then(data => {
-    
-
       // Extract and format the meaningful text from the verses
       const verses = data.data
 
@@ -88,11 +86,10 @@ function sendAudioRecording(blob) {
           `<div>${element.reference}</div><div> ${element.text}</div>`
       );
       console.log(`this is an error ${htmlResult}`)
-
-
+      // Join the HTML result with line breaks
       htmlResult = htmlResult.join('\n');
-
-      resultTextArea.innerHTML = `<div>${htmlResult}</div>`; // Display the formatted text
+      // Set the HTML content inside the resultTextArea
+      resultTextArea.innerHTML = htmlResult; // Display the formatted text
 
       console.log('Recording sent successfully:', htmlResult, verses);
 
