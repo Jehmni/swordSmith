@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.centered {
+  text-align: center;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.instruction {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.mic {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.search-icon {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 5px 0 0 5px;
+  cursor: pointer;
+}
+
+.result-box {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.result-text {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.result {
+  width: 100%;
+  height: 200px;
+  padding: 12px;
+  border: none;
+  resize: none;
+  font-size: 14px;
+}

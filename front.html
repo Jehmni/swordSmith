@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Speech Interface</title>
+</head>
+<body>
+  <div class="container">
+    <div class="centered">
+      <h1 class="title">Voice Search</h1>
+      <p class="instruction">Tap on the microphone to speak</p>
+      <div class="mic-container" id="micContainer">
+        <img src="mic.jpg" alt="Microphone" class="mic" id="micImage" onclick="startRecording()"/>
+      </div>
+      <p class="result-text">Did you say...</p>
+      <div class="search-container">
+        <div class="search-box">
+          <button class="search-icon">&#128269;</button>
+          <textarea class="search-text" placeholder="Search for...">Voice search</textarea>
+        </div>
+      </div>
+      <div id="result-text-area">
+        
+      </div>
+    </div>
+  </div>
+  <script src="test.js"></script>
+</body>
+</html>
