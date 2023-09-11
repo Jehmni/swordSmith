@@ -1,4 +1,4 @@
-const resultTextArea = document.getElementById('result-text-area');
+const resultTextArea = document.getElementById("result-text-area");
 const micImage = document.getElementById('micImage');
 let recording = false;
 let micMuted = false;
@@ -36,10 +36,11 @@ async function startRecording() {
     //   sendAudioRecording(blob); // Call the sendAudioRecording function with the blob
     // };
     mediaRecorder.onstop = () => {
+      console.log('Inside mediaRecorder.onstop');// check
       console.log('Chunks:', chunks); // Debug log
       if (chunks.length > 0) {
         const blob = new Blob(chunks, { type: 'audio/wav' });
-        resultTextArea.value = 'Recording complete!';
+        //resultTextArea.value = "Recording complete!";
         chunks = [];
         console.log(blob);
         sendAudioRecording(blob);
@@ -83,9 +84,9 @@ function sendAudioRecording(blob) {
 
       // const textArray = verses.map(verse => verse.text);
       // const formattedText = textArray.join('\n\n'); // Join with double newline
-      let htmlResult = verses.map(element => {
+      let htmlResult = verses.map(element => 
           `<div>${element.reference}</div><div> ${element.text}</div>`
-      });
+      );
       console.log(`this is an error ${htmlResult}`)
 
 

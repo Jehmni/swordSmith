@@ -14,6 +14,7 @@ import io
 log = Logger('new')
 
 app = Flask(__name__)
+app.static_folder = 'static'  # Set the static folder
 CORS(app)  # This will enable CORS for all routes
 
 # Add the new route for serving the HTML file

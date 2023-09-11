@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Speech Interface</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  <title>Speech Interface</title>
 </head>
 <body>
   <div class="container">
@@ -12,7 +11,7 @@
       <h1 class="title">Voice Search</h1>
       <p class="instruction">Tap on the microphone to speak</p>
       <div class="mic-container" id="micContainer">
-        <img src="mic.jpg" alt="Microphone" class="mic" id="micImage" onclick="startRecording()"/>
+        <img src="{{ url_for('static', filename='mic.jpg') }}" alt="Microphone" class="mic" id="micImage" onclick="startRecording()">
       </div>
       <p class="result-text">Did you say...</p>
       <div class="search-container">
@@ -23,10 +22,9 @@
       </div>
       <!-- Add the text area for retrieved Bible verses below the search bar -->
       <div class="result-box">
-        <textarea class="result" id="bibleVerses" readonly></textarea>
+        <textarea class="result" id="result-text-area" readonly></textarea>
       </div>
     </div>
   </div>
-  <script src="test.js"></script>
-</body>
+  <script src="{{ url_for('static', filename='test.js') }}"></script></body>
 </html>
