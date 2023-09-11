@@ -16,13 +16,14 @@
       </div>
       <p class="result-text">Did you say...</p>
       <div class="search-container">
+        <!-- Move the button inside the search-box div -->
         <div class="search-box">
           <button class="search-icon">&#128269;</button>
-          <textarea class="search-text" placeholder="Search for...">Voice search</textarea>
         </div>
       </div>
-      <div id="result-text-area">
-        
+      <!-- Add the text area for retrieved Bible verses below the search bar -->
+      <div class="result-box">
+        <textarea class="result" id="bibleVerses" readonly></textarea>
       </div>
     </div>
   </div>

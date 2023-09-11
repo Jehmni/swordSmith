@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Speech Interface</title>
+</head>
+<body>
+  <div class="container">
+    <div class="centered">
+      <h1 class="title">Voice Search</h1>
+      <p class="instruction">Tap on the microphone to speak</p>
+      <div class="mic-container" id="micContainer">
+        <img src="mic.jpg" alt="Microphone" class="mic" id="micImage" onclick="startRecording()"/>
+      </div>
+      <p class="result-text">Did you say...</p>
+      <div class="search-container">
+        <!-- Move the button inside the search-box div -->
+        <div class="search-box">
+          <button class="search-icon">&#128269;</button>
+        </div>
+      </div>
+      <!-- Add the text area for retrieved Bible verses below the search bar -->
+      <div class="result-box">
+        <textarea class="result" id="bibleVerses" readonly></textarea>
+      </div>
+    </div>
+  </div>
+  <script src="test.js"></script>
+</body>
+</html>

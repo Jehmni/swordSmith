@@ -1,5 +1,5 @@
 from logging import Logger
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import whisper
 import requests
@@ -15,6 +15,11 @@ log = Logger('new')
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
+
+# Add the new route for serving the HTML file
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/api/recordings', methods=['POST'] )
 def process_audio():
