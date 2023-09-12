@@ -1,4 +1,4 @@
-const resultTextArea = document.getElementById("result-text-area");
+const container = document.getElementById("data-container");
 const micImage = document.getElementById('micImage');
 let recording = false;
 let micMuted = false;
@@ -78,20 +78,37 @@ function sendAudioRecording(blob) {
   .then(response => response.json())
   .then(data => {
       // Extract and format the meaningful text from the verses
-      const verses = data.data
+      console.log('kk',data)
+      const verses =data
+      console.log('vv',verses)
+      const items = verses.map(item => {
+        console.log('aa',item)
 
-      // const textArray = verses.map(verse => verse.text);
-      // const formattedText = textArray.join('\n\n'); // Join with double newline
-      let htmlResult = verses.map(element => 
-          `<div>${element.reference}</div><div> ${element.text}</div>`
-      );
-      console.log(`this is an error ${htmlResult}`)
-      // Join the HTML result with line breaks
-      htmlResult = htmlResult.join('\n');
-      // Set the HTML content inside the resultTextArea
-      resultTextArea.innerHTML = htmlResult; // Display the formatted text
-
-      console.log('Recording sent successfully:', htmlResult, verses);
+        // Create a <div> element for each item
+        const divElement = document.createElement("div");
+      
+        // Create <p> elements for the name and description
+        const nameElement = document.createElement("p");
+        const descriptionElement = document.createElement("p");
+      
+        // Set the content of the <p> elements to the item's properties
+        nameElement.textContent = ` ${item.reference}`;
+        descriptionElement.textContent = ` ${item.text}`;
+      
+        // Append the <p> elements to the <div>
+        divElement.appendChild(nameElement);
+        divElement.appendChild(descriptionElement);
+      
+        // You can also add more HTML or attributes to the <div> as needed
+      
+        return divElement; // Return the created <div> element
+      });
+      console.log('test',items)
+      // Append the created elements to the container
+      items.forEach(item => {
+        console.log('foreach showing',item)
+        container.appendChild(item);
+      });
 
       chunks = []; // Clear chunks array for the next recording
     }).catch(error => {console.error('Error sending recording:', error);
