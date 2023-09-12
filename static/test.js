@@ -30,8 +30,8 @@ async function startRecording() {
     }
     
     mediaRecorder.onstop = () => {
-      console.log('Inside mediaRecorder.onstop');// check
-      console.log('Chunks:', chunks); // Debug log
+      console.log('Inside mediaRecorder.onstop');
+      console.log('Chunks:', chunks);
       if (chunks.length > 0) {
         const blob = new Blob(chunks, { type: 'audio/wav' });
         chunks = [];
@@ -66,9 +66,16 @@ function sendAudioRecording(blob) {
   .then(data => {
     const verses = data.data.verses; // Access 'verses' field from the response
 
-    // Iterate over 'verses' and map as needed
+    const verseContainer = document.getElementById("data-container");
+
+    // Clear existing verses
+    verseContainer.innerHTML = '';
+
+    // Iterate over 'verses' and append each verse to the container
     verses.forEach(verse => {
       const divElement = document.createElement("div");
+      divElement.classList.add("verse"); // Add the 'verse' class
+
       const nameElement = document.createElement("p");
       const descriptionElement = document.createElement("p");
 
@@ -78,7 +85,7 @@ function sendAudioRecording(blob) {
       divElement.appendChild(nameElement);
       divElement.appendChild(descriptionElement);
 
-      container.appendChild(divElement);
+      verseContainer.appendChild(divElement);
     });
 
     chunks = []; // Clear chunks array for the next recording

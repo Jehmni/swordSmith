@@ -85,3 +85,17 @@ body {
   resize: none;
   font-size: 14px;
 }
+/* Style the verse container to limit its height and make it scrollable */
+.verse-container {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Style individual verses */
+.verse {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
