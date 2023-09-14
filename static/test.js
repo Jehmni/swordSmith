@@ -1,9 +1,12 @@
 const container = document.getElementById("data-container");
 const micImage = document.getElementById('micImage');
+const searchIcon = document.querySelector('.search-icon');
+const searchInput = document.querySelector('.search-input'); // Add this line
 let recording = false;
 let micMuted = false;
 let mediaRecorder;
 let chunks = [];
+let transcribedText = ""; // Store the transcribed text
 
 micImage.addEventListener('click', toggleRecording);
 
@@ -64,29 +67,13 @@ function sendAudioRecording(blob) {
   })
   .then(response => response.json())
   .then(data => {
-    const verses = data.data.verses; // Access 'verses' field from the response
+    transcribedText = data.verse; // Store the transcribed text
 
-    const verseContainer = document.getElementById("data-container");
+    // Insert the transcribed text into the search input
+    searchInput.value = transcribedText;
 
     // Clear existing verses
-    verseContainer.innerHTML = '';
-
-    // Iterate over 'verses' and append each verse to the container
-    verses.forEach(verse => {
-      const divElement = document.createElement("div");
-      divElement.classList.add("verse"); // Add the 'verse' class
-
-      const nameElement = document.createElement("p");
-      const descriptionElement = document.createElement("p");
-
-      nameElement.textContent = ` ${verse.reference}`;
-      descriptionElement.textContent = ` ${verse.text}`;
-
-      divElement.appendChild(nameElement);
-      divElement.appendChild(descriptionElement);
-
-      verseContainer.appendChild(divElement);
-    });
+    container.innerHTML = '';
 
     chunks = []; // Clear chunks array for the next recording
   })
@@ -94,4 +81,57 @@ function sendAudioRecording(blob) {
     console.error('Error sending recording:', error);
     chunks = []; // Clear chunks array in case of error
   });
+}
+
+// Add a click event listener to the search icon
+searchIcon.addEventListener('click', () => {
+  // Get the transcribed text from the search input
+  const searchText = searchInput.value.trim();
+  if (searchText) {
+    // Send the searchText to the backend, and let the backend make the Bible API request
+    fetch('http://127.0.0.1:5000/api/query_bible', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query_text: searchText }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the backend and display the results
+      console.log('Bible API Response:', data);
+      displayBibleVerses(data); // Call a function to display the verses
+    })
+    .catch(error => {
+      console.error('Error fetching Bible verses:', error);
+    });
+  } else {
+    console.log('Search text is empty.');
+  }
+});
+
+// Function to display Bible verses
+function displayBibleVerses(data) {
+  const versesContainer = document.getElementById("data-container");
+
+  // Clear existing verses
+  versesContainer.innerHTML = '';
+
+  // Check if there is data and that it contains verses
+  if (data && data.data && data.data.verses) {
+    const verses = data.data.verses;
+
+    // Loop through the verses and display them
+    verses.forEach(verse => {
+      const verseElement = document.createElement("div");
+      verseElement.classList.add("verse");
+      verseElement.textContent = verse.text;
+      versesContainer.appendChild(verseElement);
+    });
+  } else {
+    // Handle the case where there are no verses in the response
+    const noVersesElement = document.createElement("div");
+    noVersesElement.textContent = "No verses found.";
+    versesContainer.appendChild(noVersesElement);
+  }
 }

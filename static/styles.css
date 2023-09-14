@@ -47,6 +47,11 @@ body {
   justify-content: center;
   margin-bottom: 10px;
 }
+
+input[type="text"] {
+  border: none;
+}
+
 .search-box {
   display: flex;
   align-items: center;
@@ -62,7 +67,7 @@ body {
   color: white;
   padding: 12px 15px;
   cursor: pointer;
-  margin-left: 270px; /* Add this to move the icon to the right */
+  margin-left: 103px; /* Add this to move the icon to the right */
   border-radius: 0 5px 5px 0; /* Add this to round the right corner of the button */
 }
 

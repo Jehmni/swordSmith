@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  <title>Speech Interface</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Speech Interface</title>
 </head>
 <body>
   <div class="container">
@@ -13,10 +14,9 @@
       <div class="mic-container" id="micContainer">
         <img src="{{ url_for('static', filename='mic.jpg') }}" alt="Microphone" class="mic" id="micImage" onclick="startRecording()">
       </div>
-      <p class="result-text">Did you say...</p>
       <div class="search-container">
-        <!-- Move the button inside the search-box div -->
-        <div class="search-box">
+        <div class="search-box" id="innerSearchBox">
+          <input type="text" class="search-input" id="transcribedText" placeholder="Transcribed Text" readonly>
           <button class="search-icon">&#128269;</button>
         </div>
       </div>
@@ -24,8 +24,9 @@
       <div class="verse-container">
         <div id="data-container"></div>
       </div>
-      
     </div>
   </div>
-  <script src="{{ url_for('static', filename='test.js') }}"></script></body>
+  <script src="{{ url_for('static', filename='test.js') }}"></script>
+</body>
 </html>
+ 

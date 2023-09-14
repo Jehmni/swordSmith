@@ -1,4 +1,5 @@
-from logging import Logger
+import logging  # Correct the import
+
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import whisper
@@ -11,7 +12,7 @@ from werkzeug.utils import secure_filename
 from pydub import AudioSegment
 import io
 
-log = Logger('new')
+log = logging.getLogger('new')  # Correct the Logger usage
 
 app = Flask(__name__)
 app.static_folder = 'static'  # Set the static folder
@@ -22,8 +23,13 @@ CORS(app)  # This will enable CORS for all routes
 def index():
     return render_template('index.html')
 
-@app.route('/api/recordings', methods=['POST'] )
+# Store the transcribed text temporarily
+transcribed_text = ""
+
+@app.route('/api/recordings', methods=['POST'])
 def process_audio():
+    global transcribed_text  # Make the variable global
+
     if 'audio' not in request.files:
         return jsonify({'error': 'No audio file provided'}), 400
 
@@ -39,26 +45,44 @@ def process_audio():
         # Process the audio file and generate processed_data
         model = whisper.load_model("base")
         result = model.transcribe(temp_file.name)
-        verse = result["text"]
-        # send transcribed text to the user for confirmation before search
+        transcribed_text = result["text"]  # Store the transcribed text
 
-        # URL of the API endpoint
-        api_url = "https://api.scripture.api.bible/v1/bibles/de4e12af7f28f599-02/search"
-        api_token = "92d36072a47ab8815232393b233a3da3"
-        query = verse
-        # Query parameters
-        query_params = {
-            "query": query,
-            "sort": "relevance"
-        }
+        # Send the transcribed text to the frontend
+        return jsonify({'verse': transcribed_text})
 
-        # Set the headers
-        headers = {
-            "accept": "application/json",
-            "api-key": api_token
-        }
+    except Exception as e:
+        return jsonify({'error': 'Error processing audio: ' + str(e)}), 500
+    finally:
+        os.unlink(temp_file.name)
 
-        # Make the GET request
+# Add a new route to query the Bible API via proxy
+@app.route('/api/query_bible', methods=['POST'])
+def query_bible():
+    global transcribed_text
+
+    # Get the transcribed text from the request
+    query_text = request.json.get('query_text', '')
+
+    # You can replace this with your actual API key
+    api_key = "92d36072a47ab8815232393b233a3da3"
+
+    # URL of the Bible API endpoint
+    api_url = "https://api.scripture.api.bible/v1/bibles/de4e12af7f28f599-02/search"
+
+    # Query parameters
+    query_params = {
+        "query": query_text,
+        "sort": "relevance"
+    }
+
+    # Set the headers
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key
+    }
+
+    try:
+        # Make the GET request to the Bible API via proxy
         response = requests.get(api_url, params=query_params, headers=headers)
 
         # Check if the request was successful
@@ -66,12 +90,10 @@ def process_audio():
             scripture_response = response.json()  # Parse the response JSON data
             return jsonify(scripture_response)  # Return JSON response to the frontend
         else:
-            return jsonify({'error': 'Error while processing audio'}), 500
+            return jsonify({'error': 'Error while querying Bible API'}), 500
 
     except Exception as e:
-        return jsonify({'error': 'Error processing audio: ' + str(e)}), 500
-    finally:
-        os.unlink(temp_file.name)
+        return jsonify({'error': 'Error querying Bible API: ' + str(e)}), 500
 
 if __name__ == '__main__':
-        app.run()
+    app.run()
