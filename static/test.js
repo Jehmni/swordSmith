@@ -1,12 +1,16 @@
 const container = document.getElementById("data-container");
 const micImage = document.getElementById('micImage');
 const searchIcon = document.querySelector('.search-icon');
-const searchInput = document.querySelector('.search-input'); // Add this line
+const searchInput = document.querySelector('.search-input');
+const micLoader = document.getElementById('micLoader');
 let recording = false;
 let micMuted = false;
 let mediaRecorder;
 let chunks = [];
 let transcribedText = ""; // Store the transcribed text
+
+// Hide the mic loader initially
+micLoader.style.display = 'none';
 
 micImage.addEventListener('click', toggleRecording);
 
@@ -31,7 +35,7 @@ async function startRecording() {
         chunks.push(event.data);
       }
     }
-    
+
     mediaRecorder.onstop = () => {
       console.log('Inside mediaRecorder.onstop');
       console.log('Chunks:', chunks);
@@ -42,7 +46,7 @@ async function startRecording() {
         sendAudioRecording(blob);
       }
     };
-    
+
     mediaRecorder.start();
   } catch (error) {
     console.error('Error accessing microphone:', error);
@@ -52,6 +56,9 @@ async function startRecording() {
 function stopRecording() {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
+    micLoader.style.display = 'block'; // Show the mic loader
+    micLoader.textContent = 'Transcribing...'; // Set loader text
+    transcribedText = ''; // Clear the transcribed text
   }
 }
 
@@ -65,22 +72,28 @@ function sendAudioRecording(blob) {
     method: 'POST',
     body: payload,
   })
-  .then(response => response.json())
-  .then(data => {
-    transcribedText = data.verse; // Store the transcribed text
+    .then(response => response.json())
+    .then(data => {
+      transcribedText = data.verse; // Store the transcribed text
 
-    // Insert the transcribed text into the search input
-    searchInput.value = transcribedText;
+      // Insert the transcribed text into the search input
+      searchInput.value = transcribedText;
 
-    // Clear existing verses
-    container.innerHTML = '';
+      // Clear existing verses
+      container.innerHTML = '';
 
-    chunks = []; // Clear chunks array for the next recording
-  })
-  .catch(error => {
-    console.error('Error sending recording:', error);
-    chunks = []; // Clear chunks array in case of error
-  });
+      chunks = []; // Clear chunks array for the next recording
+      // Hide the mic loader if transcribedText has a value
+      if (transcribedText) {
+        micLoader.style.display = 'none';
+      }
+    })
+    .catch(error => {
+      console.error('Error sending recording:', error);
+      chunks = []; // Clear chunks array in case of error
+      // Hide the mic loader in case of an error
+      micLoader.style.display = 'none';
+    });
 }
 
 // Add a click event listener to the search icon
@@ -96,15 +109,15 @@ searchIcon.addEventListener('click', () => {
       },
       body: JSON.stringify({ query_text: searchText }),
     })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response from the backend and display the results
-      console.log('Bible API Response:', data);
-      displayBibleVerses(data); // Call a function to display the verses
-    })
-    .catch(error => {
-      console.error('Error fetching Bible verses:', error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response from the backend and display the results
+        console.log('Bible API Response:', data);
+        displayBibleVerses(data); // Call a function to display the verses
+      })
+      .catch(error => {
+        console.error('Error fetching Bible verses:', error);
+      });
   } else {
     console.log('Search text is empty.');
   }
@@ -125,7 +138,19 @@ function displayBibleVerses(data) {
     verses.forEach(verse => {
       const verseElement = document.createElement("div");
       verseElement.classList.add("verse");
-      verseElement.textContent = verse.text;
+
+      // Create a paragraph for the reference
+      const referenceParagraph = document.createElement("p");
+      referenceParagraph.classList.add("verse-reference");
+      referenceParagraph.textContent = verse.reference;
+      verseElement.appendChild(referenceParagraph);
+
+      // Create a paragraph for the text
+      const textParagraph = document.createElement("p");
+      textParagraph.classList.add("verse-text");
+      textParagraph.textContent = verse.text;
+      verseElement.appendChild(textParagraph);
+
       versesContainer.appendChild(verseElement);
     });
   } else {

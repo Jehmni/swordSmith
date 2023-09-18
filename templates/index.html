@@ -13,6 +13,7 @@
       <p class="instruction">Tap on the microphone to speak</p>
       <div class="mic-container" id="micContainer">
         <img src="{{ url_for('static', filename='mic.jpg') }}" alt="Microphone" class="mic" id="micImage" onclick="startRecording()">
+        <div class="loader" id="micLoader"></div> <!-- Mic loader (empty div) -->
       </div>
       <div class="search-container">
         <div class="search-box" id="innerSearchBox">
@@ -29,4 +30,3 @@
   <script src="{{ url_for('static', filename='test.js') }}"></script>
 </body>
 </html>
- 
