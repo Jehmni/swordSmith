@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <title>Speech Interface</title>
+  <title>My Bible Buddie</title>
 </head>
 <body>
   <div class="container">
     <div class="centered">
-      <h1 class="title">Voice Search</h1>
+      <h1 class="title">My Bible Buddie</h1>
       <p class="instruction">Tap on the microphone to speak</p>
       <div class="mic-container" id="micContainer">
         <img src="{{ url_for('static', filename='mic.jpg') }}" alt="Microphone" class="mic" id="micImage" onclick="startRecording()">
@@ -17,7 +17,7 @@
       </div>
       <div class="search-container">
         <div class="search-box" id="innerSearchBox">
-          <input type="text" class="search-input" id="transcribedText" placeholder="Transcribed Text" readonly>
+          <input type="text" class="search-input" id="transcribedText" placeholder="Transcribed Text">
           <button class="search-icon">&#128269;</button>
         </div>
       </div>

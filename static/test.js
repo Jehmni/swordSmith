@@ -102,12 +102,52 @@ function sendAudioRecording(blob) {
     });
 }
 
+
 // Add a click event listener to the search icon
 searchIcon.addEventListener('click', () => {
-  // Get the transcribed text from the search input
-  const searchText = searchInput.value.trim();
-  if (searchText) {
-    // Send the searchText to the backend, and let the backend make the Bible API request
+    // Get the transcribed text from the search input
+    const searchText = searchInput.value.trim();
+    if (searchText) {
+      // Check if the search input contains a number
+      if (containsNumber(searchText)) {
+        // Use GPT function to retrieve Bible verses
+        retrieveBibleVersesUsingGPT(searchText);
+      } else {
+        // Use Scripture API to retrieve verses
+        retrieveScriptureAPIVerses(searchText);
+      }
+    } else {
+      console.log('Search text is empty.');
+    }
+  });
+  
+  // Function to check if a string contains a number
+  function containsNumber(text) {
+    return /\d/.test(text);
+  }
+  
+  // Function to retrieve Bible verses using GPT-3.5
+  function retrieveBibleVersesUsingGPT(searchText) {
+    fetch('http://127.0.0.1:5000/api/by_reference', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ transcribed_text: searchText }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response from the GPT function and display the results
+        displayBibleVerses(data); // Call a function to display the verses
+        console.log('GPT Response:', data);
+      })
+      .catch(error => {
+        console.error('Error fetching Bible verses from GPT:', error);
+      });
+  }
+  
+  // Function to retrieve Bible verses using the Scripture API
+  function retrieveScriptureAPIVerses(searchText) {
     fetch('http://127.0.0.1:5000/api/query_bible', {
       method: 'POST',
       headers: {
@@ -117,7 +157,7 @@ searchIcon.addEventListener('click', () => {
     })
       .then(response => response.json())
       .then(data => {
-        // Handle the response from the backend and display the results
+        // Handle the response from the Scripture API and display the results
         console.log('Bible API Response:', data);
         displayBibleVerses(data); // Call a function to display the verses
       })
@@ -126,10 +166,8 @@ searchIcon.addEventListener('click', () => {
         // Display "No match found" when there's an error
         displayNoMatchFound();
       });
-  } else {
-    console.log('Search text is empty.');
   }
-});
+  
 
 // Function to display Bible verses or "No match found"
 function displayBibleVerses(data) {
@@ -138,41 +176,63 @@ function displayBibleVerses(data) {
   // Clear existing verses
   versesContainer.innerHTML = '';
 
-  // Check if there is data and that it contains verses
-  if (data && data.data && data.data.verses && data.data.verses.length > 0) {
-    const verses = data.data.verses;
-
-    // Loop through the verses and display them
-    verses.forEach(verse => {
+  // Check if there is data
+  if (data) {
+    // Check if the data contains the 'response' property
+    if (data.response) {
+      // Handle the case where the API returns a single verse as a string
       const verseElement = document.createElement("div");
       verseElement.classList.add("verse");
-
-      // Create a paragraph for the reference
-      const referenceParagraph = document.createElement("p");
-      referenceParagraph.classList.add("verse-reference");
-      referenceParagraph.textContent = verse.reference;
-      verseElement.appendChild(referenceParagraph);
 
       // Create a paragraph for the text
       const textParagraph = document.createElement("p");
       textParagraph.classList.add("verse-text");
-      textParagraph.textContent = verse.text;
+      textParagraph.textContent = data.response;
       verseElement.appendChild(textParagraph);
 
       versesContainer.appendChild(verseElement);
-    });
+    } else if (data.data && data.data.verses && data.data.verses.length > 0) {
+      // Handle the case where the API returns an array of verses with 'reference' and 'text'
+      const verses = data.data.verses;
+
+      // Loop through the verses and display them
+      verses.forEach(verse => {
+        const verseElement = document.createElement("div");
+        verseElement.classList.add("verse");
+  
+        // Create a paragraph for the reference
+        const referenceParagraph = document.createElement("p");
+        referenceParagraph.classList.add("verse-reference");
+        referenceParagraph.textContent = verse.reference;
+        verseElement.appendChild(referenceParagraph);
+  
+        // Create a paragraph for the text
+        const textParagraph = document.createElement("p");
+        textParagraph.classList.add("verse-text");
+        textParagraph.textContent = verse.text;
+        verseElement.appendChild(textParagraph);
+  
+        versesContainer.appendChild(verseElement);
+      });
+    } else {
+      // Display "No match found" when there is no valid verse data
+      displayNoMatchFound();
+    }
   } else {
     // Display "No match found" when there are no verses in the response
     displayNoMatchFound();
   }
 }
 
-// Function to display "No match found"
-function displayNoMatchFound() {
-  const versesContainer = document.getElementById("data-container");
-  versesContainer.innerHTML = ''; // Clear existing content
-
-  const noMatchElement = document.createElement("div");
-  noMatchElement.textContent = "No match found.";
-  versesContainer.appendChild(noMatchElement);
-}
+  
+  // Function to display "No match found"
+  function displayNoMatchFound() {
+    const versesContainer = document.getElementById("data-container");
+    versesContainer.innerHTML = ''; // Clear existing content
+  
+    const noMatchElement = document.createElement("div");
+    noMatchElement.textContent = "No match found.";
+    versesContainer.appendChild(noMatchElement);
+  }
+  
+  
