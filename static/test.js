@@ -14,6 +14,7 @@ micLoader.style.display = 'none';
 
 micImage.addEventListener('click', toggleRecording);
 
+//function to toggle recording
 function toggleRecording() {
   if (!recording) {
     recording = true;
