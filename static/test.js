@@ -83,9 +83,13 @@ function sendAudioRecording(blob) {
       container.innerHTML = '';
 
       chunks = []; // Clear chunks array for the next recording
-      // Hide the mic loader if transcribedText has a value
+      
+      // Check if transcribedText has a value
       if (transcribedText) {
         micLoader.style.display = 'none';
+      } else {
+        // Display "No match found" when there is no transcribed text
+        displayNoMatchFound();
       }
     })
     .catch(error => {
@@ -93,6 +97,8 @@ function sendAudioRecording(blob) {
       chunks = []; // Clear chunks array in case of error
       // Hide the mic loader in case of an error
       micLoader.style.display = 'none';
+      // Display "No match found" when there's an error
+      displayNoMatchFound();
     });
 }
 
@@ -117,13 +123,15 @@ searchIcon.addEventListener('click', () => {
       })
       .catch(error => {
         console.error('Error fetching Bible verses:', error);
+        // Display "No match found" when there's an error
+        displayNoMatchFound();
       });
   } else {
     console.log('Search text is empty.');
   }
 });
 
-// Function to display Bible verses
+// Function to display Bible verses or "No match found"
 function displayBibleVerses(data) {
   const versesContainer = document.getElementById("data-container");
 
@@ -131,7 +139,7 @@ function displayBibleVerses(data) {
   versesContainer.innerHTML = '';
 
   // Check if there is data and that it contains verses
-  if (data && data.data && data.data.verses) {
+  if (data && data.data && data.data.verses && data.data.verses.length > 0) {
     const verses = data.data.verses;
 
     // Loop through the verses and display them
@@ -154,9 +162,17 @@ function displayBibleVerses(data) {
       versesContainer.appendChild(verseElement);
     });
   } else {
-    // Handle the case where there are no verses in the response
-    const noVersesElement = document.createElement("div");
-    noVersesElement.textContent = "No verses found.";
-    versesContainer.appendChild(noVersesElement);
+    // Display "No match found" when there are no verses in the response
+    displayNoMatchFound();
   }
+}
+
+// Function to display "No match found"
+function displayNoMatchFound() {
+  const versesContainer = document.getElementById("data-container");
+  versesContainer.innerHTML = ''; // Clear existing content
+
+  const noMatchElement = document.createElement("div");
+  noMatchElement.textContent = "No match found.";
+  versesContainer.appendChild(noMatchElement);
 }
