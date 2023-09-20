@@ -11,12 +11,21 @@ import tempfile
 from werkzeug.utils import secure_filename
 from pydub import AudioSegment
 import io
+import openai
 
 log = logging.getLogger('new')  # Correct the Logger usage
 
 app = Flask(__name__)
 app.static_folder = 'static'  # Set the static folder
 CORS(app)  # This will enable CORS for all routes
+
+# Initialize your OpenAI API key
+openai.api_key = "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"
+
+# Define the OpenAI model and other parameters
+openai_model = "gpt-3.5-turbo-16k"
+max_tokens = 100
+temperature = 0.1
 
 # Add the new route for serving the HTML file
 @app.route('/')
@@ -95,5 +104,37 @@ def query_bible():
     except Exception as e:
         return jsonify({'error': 'Error querying Bible API: ' + str(e)}), 500
 
+# Define the search_by_reference function
+def search_by_reference(transcribedText):
+    try:
+        response = openai.ChatCompletion.create(model="gpt-3.5-turbo-16k",
+                                                max_tokens=100,
+                                                temperature=0.1,
+                                                messages= [
+                                                    {"role": "system", "content": "You are a bible assistant that  help users to find scriptures or bible passages specifically from the King James Version(KJV)"},
+                                                    {"role": "user", "content": transcribedText}
+                                                ])
+
+        result = response["choices"][0]["message"]["content"]
+        return result
+    except Exception as e:
+        return "Failed to get text response from GPT3.5 API"
+
+# Modify your /api/by_reference route to use the function
+@app.route('/api/by_reference', methods=['POST'])
+def by_reference():
+    try:
+        # Get the user's query from the request
+        query_text = request.json.get('transcribed_text', '')
+
+        # Use the search_by_reference function
+        response = search_by_reference(query_text)
+
+        return jsonify({"response": response})
+
+    except Exception as e:
+        return jsonify({'error': 'Error processing request: ' + str(e)}), 500
+
+#run app
 if __name__ == '__main__':
     app.run()
