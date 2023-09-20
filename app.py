@@ -12,7 +12,10 @@ from werkzeug.utils import secure_filename
 from pydub import AudioSegment
 import io
 import openai
+from decouple import config
 
+# Load the .env file
+#config()
 log = logging.getLogger('new')  # Correct the Logger usage
 
 app = Flask(__name__)
@@ -20,10 +23,10 @@ app.static_folder = 'static'  # Set the static folder
 CORS(app)  # This will enable CORS for all routes
 
 # Initialize your OpenAI API key
-openai.api_key = "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"
+openai.api_key = config('OPENAI_API_KEY')
 
 # Define the OpenAI model and other parameters
-openai_model = "gpt-3.5-turbo-16k"
+openai_model = "gpt-4"
 max_tokens = 100
 temperature = 0.1
 
@@ -72,9 +75,8 @@ def query_bible():
     # Get the transcribed text from the request
     query_text = request.json.get('query_text', '')
 
-    # You can replace this with your actual API key
-    api_key = "92d36072a47ab8815232393b233a3da3"
-
+    # Use os to get scripture.api's key
+    api_key = config('api_key')
     # URL of the Bible API endpoint
     api_url = "https://api.scripture.api.bible/v1/bibles/de4e12af7f28f599-02/search"
 
@@ -107,11 +109,11 @@ def query_bible():
 # Define the search_by_reference function
 def search_by_reference(transcribedText):
     try:
-        response = openai.ChatCompletion.create(model="gpt-3.5-turbo-16k",
+        response = openai.ChatCompletion.create(model="gpt-4",
                                                 max_tokens=100,
                                                 temperature=0.1,
                                                 messages= [
-                                                    {"role": "system", "content": "You are a bible assistant that  help users to find scriptures or bible passages specifically from the King James Version(KJV)"},
+                                                    {"role": "system", "content": "You are a bible assistant that  helps users to find scriptures or bible passages specifically from the King James Version(KJV)"},
                                                     {"role": "user", "content": transcribedText}
                                                 ])
 

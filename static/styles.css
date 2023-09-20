@@ -110,7 +110,7 @@ input[type="text"] {
   display: flex;
   align-items: center;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #007BFF;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -121,7 +121,7 @@ input[type="text"] {
   color: white;
   padding: 12px 15px;
   cursor: pointer;
-  margin-left: 103px; /* Add this to move the icon to the right */
+  margin-left: 105px; /* Add this to move the icon to the right */
   border-radius: 0 5px 5px 0; /* Add this to round the right corner of the button */
 }
 
@@ -148,14 +148,17 @@ input[type="text"] {
 .verse-container {
   max-height: 400px; /* Adjust the height as needed */
   overflow-y: auto;
-  border: 1px solid #ccc;
+  border: 1px solid #007BFF;
   border-radius: 5px;
   margin-bottom: 10px;
+  background-color: #f8f9fa; /* Add a background color */
 }
 
 /* Style individual verses */
 .verse {
   padding: 10px;
   border-bottom: 1px solid #ccc;
+  background-color: #EEF0F3; /* Add a background color */
+  color: #333333; /* Add text color */
 }
 
