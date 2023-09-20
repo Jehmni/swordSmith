@@ -15,6 +15,7 @@ import openai
 from decouple import config
 
 # Load the .env file
+#config = Config()
 #config()
 log = logging.getLogger('new')  # Correct the Logger usage
 
@@ -27,7 +28,7 @@ openai.api_key = config('OPENAI_API_KEY')
 
 # Define the OpenAI model and other parameters
 openai_model = "gpt-4"
-max_tokens = 100
+max_tokens = 1500
 temperature = 0.1
 
 # Add the new route for serving the HTML file
@@ -110,7 +111,7 @@ def query_bible():
 def search_by_reference(transcribedText):
     try:
         response = openai.ChatCompletion.create(model="gpt-4",
-                                                max_tokens=100,
+                                                max_tokens=1500,
                                                 temperature=0.1,
                                                 messages= [
                                                     {"role": "system", "content": "You are a bible assistant that  helps users to find scriptures or bible passages specifically from the King James Version(KJV)"},
