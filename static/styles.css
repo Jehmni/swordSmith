@@ -1,27 +1,26 @@
+/* Default styles for larger screens (desktop) */
 body {
-  margin: 0;
+  /*margin: 0;*/
   font-family: Arial, sans-serif;
-  background-image: url("./background2.jpg"); 
-  background-size: cover; 
-  background-repeat: no-repeat; 
+  background-image: url("./background2.jpg");
+  background-size: cover;
   background-attachment: fixed;
-  }
-  
-  
-  * {
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+* {
   box-sizing: border-box;
-  }
-  
-  
-  .container {
+}
+
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  }
-  
-  
-  .centered {
+}
+
+.centered {
   text-align: center;
   padding: 40px;
   background-color: #f8e7d2;
@@ -29,54 +28,54 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 400px;
-  }
-  
-  
-  .title {
+}
+
+.title {
   font-size: 24px;
   margin-bottom: 10px;
   color: #150802;
-  }
-  
-  
-  .instruction {
+}
+
+.instruction {
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #676793;
-  }
-  
-  
-  .mic {
-  width: 100%;
+}
+
+.mic {
   max-width: 100px;
-  height: 100px;
+  height: 50px;
   cursor: pointer;
   margin-bottom: 5px;
   border-radius: 50%;
-  background-color: #f8e7d2; 
-  }
+  background-color: #f8e7d2;
+  margin-top: 10px;
+}
 
-  .mic::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #f8e7d2;; /* Replace with your desired background color */
-    border-radius: inherit;
-    z-index: 1; /* Send the pseudo-element behind the image */
+/* Add this CSS to create the pulsating animation */
+.mic.pulsate {
+  animation: pulsate 1s infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
   }
-  
-  
-  .mic-container {
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.mic-container {
   position: relative;
   justify-content: center;
   overflow: hidden;
-  }
-  
-  
-  .loader {
+}
+
+.loader {
   width: 100%;
   max-width: 200px;
   height: 20px;
@@ -85,10 +84,9 @@ body {
   border-radius: 50px;
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
   margin: 0 auto; /* Add this line */
-  }
-  
-  
-  .loader:after {
+}
+
+.loader:after {
   border-radius: 50px;
   content: '';
   position: absolute;
@@ -99,32 +97,30 @@ body {
   right: 360px;
   animation: slide 2s linear infinite;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-  
-  
-  @keyframes slide {
+}
+
+@keyframes slide {
   0% {
-  right: 150px;
-  left: 2px;
+    right: 150px;
+    left: 2px;
   }
   5% {
-  left: 2px;
+    left: 2px;
   }
   50% {
-  right: 2px;
-  left: 150px;
+    right: 2px;
+    left: 150px;
   }
   55% {
-  right: 2px;
+    right: 2px;
   }
   100% {
-  right: 150px;
-  left: 2px;
+    right: 150px;
+    left: 2px;
   }
-  }
-  
-  
-  .search-container {
+}
+
+.search-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,19 +128,17 @@ body {
   margin-top: 10px;
   width: 100%;
   height: 42px;
-  }
-  
-  
-  input[type='text'] {
+}
+
+input[type='text'] {
   border: none;
   width: 100%;
   height: 100%;
   padding: 0 5px;
   font-size: 18px;
-  }
-  
-  
-  .search-box {
+}
+
+.search-box {
   display: flex;
   align-items: center;
   width: 100%;
@@ -152,59 +146,58 @@ body {
   border: 1px solid #793610;
   border-radius: 5px;
   overflow: hidden;
-  }
-  
-  
-  .search-icon {
+}
+
+.search-icon {
   background-color: #916533;
   border: none;
   color: rgb(227, 236, 54);
   padding: 12px 15px;
   height: 100%;
   cursor: pointer;
-  border-radius: 0 5px 5px 0; 
-  }
-  
-  
-  .result-box {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  }
-  
-  
-  .result-text {
-  font-size: 18px;
-  margin-bottom: 10px;
-  }
-  
-  
-  .result {
-  width: 100%;
-  height: 200px;
-  padding: 12px;
-  border: none;
-  resize: none;
-  font-size: 14px;
-  }
-  /* Style the verse container to limit its height and make it scrollable */
-  .verse-container {
+  border-radius: 0 5px 5px 0;
+}
+
+/* Style the verse container to limit its height and make it scrollable */
+.verse-container {
   max-height: 400px; /* To adjust the height as needed */
   overflow-y: auto;
   border: 1px solid #793610;
   border-radius: 5px;
   margin-bottom: 10px;
-  background-color: #f8f9fa; 
-  }
-  
-  
-  /* Style individual verses */
-  .verse {
+  background-color: #f8f9fa;
+}
+
+/* Style individual verses */
+.verse {
   padding: 10px;
   border-bottom: 1px solid #793610;
   background-color: #f2dbbe; /* Add a background color */
   color: #333333; /* Add text color */
+}
+
+/* Media Query for Tablets (768px to 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  body {
+    background-image: 100% !important; /* Use percentages to cover the entire screen */
+  }
+  .centered {
+    max-width: 70%; /* Optimal for tablets, adjust as needed */
+  }
+}
+
+/* Media Query for Mobile Devices (up to 767px) */
+@media screen and (max-width: 767px) {
+  body {
+    background-image: 100% 100% !important; /* Use percentages to cover the entire screen */
   }
   
-  
-  
-  
+  .centered {
+    max-width: 80%; /* Optimal for mobile devices, adjust as needed */
+  }
+
+  .mic {
+    max-width: 100px; /* Optimal for mobile devices, adjust as needed */
+    height: 50px; /* Optimal for mobile devices, adjust as needed */
+  }
+}

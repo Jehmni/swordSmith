@@ -3,26 +3,29 @@ const micImage = document.getElementById('micImage');
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
 const micLoader = document.getElementById('micLoader');
+const totalMatchesSpan = document.getElementById("totalMatches");
+const verseCountSpan = document.getElementById("verseCount");
 let recording = false;
 let micMuted = false;
 let mediaRecorder;
 let chunks = [];
 let transcribedText = ""; // Store the transcribed text
 
-// Hide the mic loader initially
+// Hide some elements initially
 micLoader.style.display = 'none';
+totalMatchesSpan.style.display = 'none'; 
+verseCountSpan.style.display = 'none'; 
 
 micImage.addEventListener('click', toggleRecording);
-
-//function to toggle recording
+// Function to toggle recording
 function toggleRecording() {
   if (!recording) {
     recording = true;
-    micImage.style.opacity = 0.5;
+    micImage.classList.add('pulsate'); // Add the pulsate class
     startRecording();
   } else {
     recording = false;
-    micImage.style.opacity = 1;
+    micImage.classList.remove('pulsate'); // Remove the pulsate class
     stopRecording();
   }
 }
@@ -75,6 +78,7 @@ function sendAudioRecording(blob) {
   })
     .then(response => response.json())
     .then(data => {
+      console.log('API Response Data:', data);
       transcribedText = data.verse; // Store the transcribed text
 
       // Insert the transcribed text into the search input
@@ -84,7 +88,7 @@ function sendAudioRecording(blob) {
       container.innerHTML = '';
 
       chunks = []; // Clear chunks array for the next recording
-      
+
       // Check if transcribedText has a value
       if (transcribedText) {
         micLoader.style.display = 'none';
@@ -103,72 +107,86 @@ function sendAudioRecording(blob) {
     });
 }
 
-
 // Add a click event listener to the search icon
 searchIcon.addEventListener('click', () => {
-    // Get the transcribed text from the search input
-    const searchText = searchInput.value.trim();
-    if (searchText) {
-      // Check if the search input contains a number
-      if (containsNumber(searchText)) {
-        // Use GPT function to retrieve Bible verses
-        retrieveBibleVersesUsingGPT(searchText);
-      } else {
-        // Use Scripture API to retrieve verses
-        retrieveScriptureAPIVerses(searchText);
-      }
+  // Get the transcribed text from the search input
+  const searchText = searchInput.value.trim();
+  if (searchText) {
+    // Check if the search input contains a number
+    if (containsNumber(searchText)) {
+      // Use GPT function to retrieve Bible verses
+      retrieveBibleVersesUsingGPT(searchText);
     } else {
-      console.log('Search text is empty.');
+      // Use Scripture API to retrieve verses
+      retrieveScriptureAPIVerses(searchText);
     }
-  });
-  
-  // Function to check if a string contains a number
-  function containsNumber(text) {
-    return /\d/.test(text);
+  } else {
+    console.log('Search text is empty.');
   }
-  
-  // Function to retrieve Bible verses using GPT-3.5
-  function retrieveBibleVersesUsingGPT(searchText) {
-    fetch('http://127.0.0.1:5000/api/by_reference', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ transcribed_text: searchText }),
+});
+
+// Function to check if a string contains a number
+function containsNumber(text) {
+  return /\d/.test(text);
+}
+
+// Function to retrieve Bible verses using GPT-3.5
+function retrieveBibleVersesUsingGPT(searchText) {
+  fetch('http://127.0.0.1:5000/api/by_reference', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ transcribed_text: searchText }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the GPT function and display the results
+      displayBibleVerses(data); // Call a function to display the verses
+      console.log('GPT Response:', data);
     })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response from the GPT function and display the results
-        displayBibleVerses(data); // Call a function to display the verses
-        console.log('GPT Response:', data);
-      })
-      .catch(error => {
-        console.error('Error fetching Bible verses from GPT:', error);
-      });
-  }
-  
-  // Function to retrieve Bible verses using the Scripture API
-  function retrieveScriptureAPIVerses(searchText) {
-    fetch('http://127.0.0.1:5000/api/query_bible', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query_text: searchText }),
+    .catch(error => {
+      console.error('Error fetching Bible verses from GPT:', error);
+    });
+}
+
+// Function to retrieve Bible verses using the Scripture API
+function retrieveScriptureAPIVerses(searchText) {
+  fetch('http://127.0.0.1:5000/api/query_bible', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query_text: searchText }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the Scripture API and add total and verseCount
+      if (data && data.data && data.data.total !== undefined && data.data.verseCount !== undefined) {
+        // Add total and verseCount to the response data
+        data.total = data.data.total;
+        data.verseCount = data.data.verseCount;
+    
+        // Update the spans with the corresponding values and make them visible
+        totalMatchesSpan.textContent = `${data.total} matches found,`;
+        verseCountSpan.textContent = `${data.verseCount} displayed.`;
+        totalMatchesSpan.style.display = 'inline'; // Make totalMatchesSpan visible
+        verseCountSpan.style.display = 'inline'; // Make verseCountSpan visible
+      } else {
+        // If total and verseCount are not present, set them to 0 and hide the spans
+        data.total = 0;
+        data.verseCount = 0;
+        totalMatchesSpan.style.display = 'none'; // Hide totalMatchesSpan
+        verseCountSpan.style.display = 'none'; // Hide verseCountSpan
+      }
+    
+      console.log('Bible API Response with total and verseCount:', data);
+    
+      // Call a function to display the verses
+      displayBibleVerses(data);
     })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response from the Scripture API and display the results
-        console.log('Bible API Response:', data);
-        displayBibleVerses(data); // Call a function to display the verses
-      })
-      .catch(error => {
-        console.error('Error fetching Bible verses:', error);
-        // Display "No match found" when there's an error
-        displayNoMatchFound();
-      });
-  }
-  
+}
+
 
 // Function to display Bible verses or "No match found"
 function displayBibleVerses(data) {
@@ -200,19 +218,19 @@ function displayBibleVerses(data) {
       verses.forEach(verse => {
         const verseElement = document.createElement("div");
         verseElement.classList.add("verse");
-  
+
         // Create a paragraph for the reference
         const referenceParagraph = document.createElement("p");
         referenceParagraph.classList.add("verse-reference");
         referenceParagraph.textContent = verse.reference;
         verseElement.appendChild(referenceParagraph);
-  
+
         // Create a paragraph for the text
         const textParagraph = document.createElement("p");
         textParagraph.classList.add("verse-text");
         textParagraph.textContent = verse.text;
         verseElement.appendChild(textParagraph);
-  
+
         versesContainer.appendChild(verseElement);
       });
     } else {
@@ -225,15 +243,12 @@ function displayBibleVerses(data) {
   }
 }
 
-  
-  // Function to display "No match found"
-  function displayNoMatchFound() {
-    const versesContainer = document.getElementById("data-container");
-    versesContainer.innerHTML = ''; // Clear existing content
-  
-    const noMatchElement = document.createElement("div");
-    noMatchElement.textContent = "No match found.";
-    versesContainer.appendChild(noMatchElement);
-  }
-  
-  
+// Function to display "No match found"
+function displayNoMatchFound() {
+  const versesContainer = document.getElementById("data-container");
+  versesContainer.innerHTML = ''; // Clear existing content
+
+  const noMatchElement = document.createElement("div");
+  noMatchElement.textContent = "No match found.";
+  versesContainer.appendChild(noMatchElement);
+}

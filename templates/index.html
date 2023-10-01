@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <title>Bible Voice Search</title>
 </head>
@@ -10,9 +10,9 @@
   <div class="container">
     <div class="centered">
       <h1 class="title">My Bible Buddie</h1>
-      <p class="instruction">Tap on the microphone to speak</p>
+      <p class="instruction">Tap the microphone to start recording. Tap again to stop.</p>
       <div class="mic-container" id="micContainer">
-        <img src="{{ url_for('static', filename='mic.jpg') }}" alt="Microphone" class="mic" id="micImage" onclick="startRecording()">
+        <img src="{{ url_for('static', filename='microphone.jpeg') }}" alt="Microphone" class="mic" id="micImage" onclick="startRecording()">
         <div class="loader" id="micLoader"></div> <!-- Mic loader (empty div) -->
       </div>
       <div class="search-container">
@@ -21,6 +21,10 @@
           <button class="search-icon">&#128269;</button>
         </div>
       </div>
+      <p>
+        <span id="totalMatches">matches found,</span>
+        <span id="verseCount">displayed.</span>
+      </p>
       <!-- Add a wrapper div for the verses container -->
       <div class="verse-container">
         <div id="data-container"></div>

@@ -84,7 +84,8 @@ def query_bible():
     # Query parameters
     query_params = {
         "query": query_text,
-        "sort": "relevance"
+        "sort": "relevance",
+        "limit": 200
     }
 
     # Set the headers
