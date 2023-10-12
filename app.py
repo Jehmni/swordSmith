@@ -1,5 +1,4 @@
-import logging  # Correct the import
-
+import logging  
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import whisper
