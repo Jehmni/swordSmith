@@ -21,7 +21,7 @@ log = logging.getLogger('new')  # Correct the Logger usage
 app = Flask(__name__)
 app.static_folder = 'static'  # Set the static folder
 CORS(app)  # This will enable CORS for all routes
-
+#.......
 # Initialize your OpenAI API key
 openai.api_key = config('OPENAI_API_KEY')
 
