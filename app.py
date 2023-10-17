@@ -13,9 +13,6 @@ import io
 import openai
 from decouple import config
 
-# Load the .env file
-#config = Config()
-#config()
 log = logging.getLogger('new')  # Correct the Logger usage
 
 app = Flask(__name__)
@@ -30,7 +27,7 @@ openai_model = "gpt-4"
 max_tokens = 1500
 temperature = 0.1
 
-# Add the new route for serving the HTML file
+# Add route for serving the HTML file
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -123,7 +120,7 @@ def search_by_reference(transcribedText):
     except Exception as e:
         return "Failed to get text response from GPT3.5 API"
 
-# Modify your /api/by_reference route to use the function
+# Modify /api/by_reference route to use the function
 @app.route('/api/by_reference', methods=['POST'])
 def by_reference():
     try:

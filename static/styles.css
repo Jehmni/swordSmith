@@ -52,7 +52,7 @@ body {
   margin-top: 10px;
 }
 
-/* Add this CSS to create the pulsating animation */
+/* to create the pulsating animation on mic*/
 .mic.pulsate {
   animation: pulsate 1s infinite;
 }
@@ -83,7 +83,7 @@ body {
   position: relative;
   border-radius: 50px;
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
-  margin: 0 auto; /* Add this line */
+  margin: 0 auto; 
 }
 
 .loader:after {
@@ -160,7 +160,7 @@ input[type='text'] {
 
 /* Style the verse container to limit its height and make it scrollable */
 .verse-container {
-  max-height: 400px; /* To adjust the height as needed */
+  max-height: 400px; 
   overflow-y: auto;
   border: 1px solid #793610;
   border-radius: 5px;
@@ -182,7 +182,7 @@ input[type='text'] {
     background-image: 100% !important; /* Use percentages to cover the entire screen */
   }
   .centered {
-    max-width: 70%; /* Optimal for tablets, adjust as needed */
+    max-width: 70%; 
   }
 }
 
@@ -193,11 +193,11 @@ input[type='text'] {
   }
   
   .centered {
-    max-width: 80%; /* Optimal for mobile devices, adjust as needed */
+    max-width: 80%; /* Optimal for mobile devices */
   }
 
   .mic {
-    max-width: 100px; /* Optimal for mobile devices, adjust as needed */
-    height: 50px; /* Optimal for mobile devices, adjust as needed */
+    max-width: 100px; /* Optimal for mobile devices*/
+    height: 50px; /* Optimal for mobile devices */
   }
 }
